@@ -1,0 +1,1467 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>CBD商城</title>
+<style>
+:root {
+  --primary: #FF6B00;
+  --primary-light: #FF8C33;
+  --primary-dark: #E65A00;
+  --secondary: #FF4757;
+  --text-main: #333333;
+  --text-light: #666666;
+  --text-gray: #999999;
+  --bg: #FFFFFF;
+  --bg-gray: #F5F5F5;
+  --border: #E5E5E5;
+  --shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: var(--bg-gray);
+  color: var(--text-main);
+  max-width: 414px;
+  margin: 0 auto;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ========== Page Container ========== */
+.page { display: none; }
+.page.active { display: block; }
+
+/* ========== Status Bar ========== */
+.status-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px;
+  font-size: 12px;
+  color: var(--text-light);
+  background: var(--bg);
+}
+
+/* ========== Search Header ========== */
+.search-header {
+  background: var(--bg);
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+.scan-btn {
+  width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+}
+.scan-btn svg { width: 20px; height: 20px; stroke: var(--text-light); fill: none; stroke-width: 1.5; }
+.search-box {
+  flex: 1;
+  background: var(--bg-gray);
+  border-radius: 20px;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.search-box svg { width: 16px; height: 16px; stroke: var(--text-gray); fill: none; stroke-width: 1.5; }
+.search-box input {
+  background: none; border: none; color: var(--text-main);
+  font-size: 13px; flex: 1; outline: none;
+}
+.search-box input::placeholder { color: var(--text-gray); }
+.message-btn {
+  width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; position: relative;
+}
+.message-btn svg { width: 20px; height: 20px; stroke: var(--text-light); fill: none; stroke-width: 1.5; }
+.message-badge {
+  position: absolute; top: 4px; right: 4px;
+  width: 8px; height: 8px; background: var(--secondary); border-radius: 50%;
+}
+
+/* ========== Banner ========== */
+.banner {
+  margin: 12px; border-radius: 12px; overflow: hidden;
+  position: relative; height: 160px;
+  background: linear-gradient(135deg, #FF6B00 0%, #FF8C33 50%, #FF6B00 100%);
+}
+.banner-content {
+  padding: 24px; height: 100%;
+  display: flex; flex-direction: column; justify-content: center;
+  position: relative; z-index: 1;
+}
+.banner-tag {
+  font-size: 10px; letter-spacing: 2px; color: white;
+  margin-bottom: 6px; text-transform: uppercase;
+  background: rgba(255,255,255,0.2); padding: 2px 8px;
+  border-radius: 4px; display: inline-block; width: fit-content;
+}
+.banner-title { font-size: 22px; font-weight: 700; color: white; margin-bottom: 4px; }
+.banner-desc { font-size: 12px; color: rgba(255,255,255,0.9); margin-bottom: 12px; }
+.banner-btn {
+  display: inline-block; background: white; color: var(--primary);
+  padding: 6px 20px; border-radius: 20px; font-size: 12px;
+  font-weight: 600; text-decoration: none; width: fit-content; cursor: pointer;
+}
+.banner-dots { position: absolute; bottom: 10px; right: 16px; display: flex; gap: 6px; }
+.banner-dots span { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.4); }
+.banner-dots span.active { background: white; width: 18px; border-radius: 3px; }
+
+/* ========== Category Grid ========== */
+.category-grid {
+  display: grid; grid-template-columns: repeat(5, 1fr);
+  gap: 8px; padding: 0 12px; margin: 16px 0;
+}
+.category-item { text-align: center; cursor: pointer; }
+.category-icon {
+  width: 48px; height: 48px; border-radius: 12px; background: white;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px; margin: 0 auto 6px; box-shadow: var(--shadow);
+}
+.category-name { font-size: 11px; color: var(--text-main); }
+
+/* ========== Section ========== */
+.section { margin-bottom: 16px; }
+.section-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 0 12px; margin-bottom: 10px;
+}
+.section-title {
+  font-size: 16px; font-weight: 600; color: var(--text-main);
+  display: flex; align-items: center; gap: 6px;
+}
+.section-title::before {
+  content: ''; display: inline-block; width: 3px; height: 16px;
+  background: var(--primary); border-radius: 2px;
+}
+.section-more {
+  font-size: 12px; color: var(--text-gray); text-decoration: none;
+  display: flex; align-items: center; gap: 2px;
+}
+
+/* ========== Flash Sale ========== */
+.flash-sale {
+  margin: 0 12px 16px; background: white; border-radius: 12px;
+  padding: 14px; box-shadow: var(--shadow);
+}
+.flash-header {
+  display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;
+}
+.flash-title {
+  font-size: 15px; font-weight: 600; color: var(--text-main);
+  display: flex; align-items: center; gap: 8px;
+}
+.flash-timer { display: flex; gap: 4px; align-items: center; }
+.flash-timer span {
+  background: var(--primary); color: white; font-size: 11px;
+  padding: 2px 6px; border-radius: 4px; font-weight: 600;
+}
+.flash-timer em { font-style: normal; color: var(--text-light); font-size: 12px; }
+.flash-list { display: flex; gap: 10px; overflow-x: auto; }
+.flash-list::-webkit-scrollbar { display: none; }
+.flash-item { flex-shrink: 0; width: 90px; text-align: center; cursor: pointer; }
+.flash-item-img {
+  width: 90px; height: 90px; background: var(--bg-gray); border-radius: 8px;
+  margin-bottom: 6px; display: flex; align-items: center; justify-content: center;
+  font-size: 32px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+.flash-item-price { font-size: 14px; font-weight: 700; color: var(--primary); }
+.flash-item-orig { font-size: 10px; color: var(--text-gray); text-decoration: line-through; }
+
+/* ========== Product Grid ========== */
+.product-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 12px;
+}
+.product-card {
+  background: white; border-radius: 10px; overflow: hidden;
+  box-shadow: var(--shadow); cursor: pointer; transition: transform 0.2s;
+}
+.product-card:hover { transform: translateY(-2px); }
+.product-img {
+  width: 100%; aspect-ratio: 1; background: var(--bg-gray);
+  display: flex; align-items: center; justify-content: center; position: relative;
+}
+.product-img-placeholder { font-size: 48px; opacity: 0.3; }
+.product-tag {
+  position: absolute; top: 8px; left: 8px; background: var(--primary);
+  color: white; font-size: 9px; padding: 2px 6px; border-radius: 4px; font-weight: 600;
+}
+.product-info { padding: 10px; }
+.product-name {
+  font-size: 13px; color: var(--text-main); line-height: 1.4;
+  display: -webkit-box; -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 6px;
+}
+.product-price { display: flex; align-items: baseline; gap: 6px; }
+.price-current { font-size: 16px; font-weight: 700; color: var(--primary); }
+.price-original { font-size: 11px; color: var(--text-gray); text-decoration: line-through; }
+.sales-count { font-size: 10px; color: var(--text-gray); margin-top: 4px; }
+
+/* ========== Tab Bar ========== */
+.tab-bar {
+  position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 414px; max-width: 100%; background: white;
+  border-top: 1px solid var(--border);
+  display: flex; justify-content: space-around;
+  padding: 6px 0 22px; z-index: 100;
+}
+.tab-item { text-align: center; cursor: pointer; flex: 1; }
+.tab-item svg {
+  width: 22px; height: 22px; stroke: var(--text-gray);
+  fill: none; stroke-width: 1.5; margin-bottom: 2px;
+}
+.tab-item span { display: block; font-size: 10px; color: var(--text-gray); }
+.tab-item.active svg { stroke: var(--primary); }
+.tab-item.active span { color: var(--primary); }
+
+/* ========== Bottom Spacer ========== */
+.bottom-spacer { height: 70px; }
+
+/* ========== Login Modal ========== */
+.login-modal {
+  display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5); z-index: 1000;
+  align-items: center; justify-content: center;
+}
+.login-modal.show { display: flex; }
+.login-content {
+  background: white; border-radius: 16px; padding: 24px;
+  width: 300px; text-align: center;
+}
+.login-title { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+.login-desc { font-size: 13px; color: var(--text-light); margin-bottom: 20px; }
+.login-btn {
+  width: 100%; padding: 12px; background: var(--primary); color: white;
+  border: none; border-radius: 24px; font-size: 14px; font-weight: 600;
+  cursor: pointer; margin-bottom: 10px;
+}
+.login-cancel {
+  width: 100%; padding: 12px; background: transparent; color: var(--text-light);
+  border: none; border-radius: 24px; font-size: 14px; cursor: pointer;
+}
+
+/* ==========================================================
+   PAGE: Category (分类)
+   ========================================================== */
+.category-layout { display: flex; height: calc(100vh - 56px); overflow: hidden; }
+.category-sidebar {
+  width: 90px; background: var(--bg-gray); overflow-y: auto; flex-shrink: 0;
+}
+.category-sidebar::-webkit-scrollbar { display: none; }
+.sidebar-item {
+  padding: 16px 8px; text-align: center; font-size: 13px;
+  color: var(--text-light); cursor: pointer; position: relative; transition: all 0.2s;
+}
+.sidebar-item.active { background: var(--bg); color: var(--primary); font-weight: 600; }
+.sidebar-item.active::before {
+  content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+  width: 3px; height: 16px; background: var(--primary); border-radius: 0 2px 2px 0;
+}
+.category-content { flex: 1; background: var(--bg); overflow-y: auto; padding-bottom: 80px; }
+.category-content::-webkit-scrollbar { display: none; }
+.category-banner {
+  width: 100%; height: 120px;
+  background: linear-gradient(135deg, #FF6B00 0%, #FF8C33 100%);
+  display: flex; align-items: center; justify-content: center;
+  color: white; font-size: 18px; font-weight: 600; margin-bottom: 12px;
+}
+.sub-category-section { padding: 12px; }
+.sub-category-title {
+  font-size: 14px; font-weight: 600; color: var(--text-main);
+  margin-bottom: 12px; display: flex; align-items: center; gap: 6px;
+}
+.sub-category-title::before {
+  content: ''; display: inline-block; width: 3px; height: 14px;
+  background: var(--primary); border-radius: 2px;
+}
+.sub-category-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 12px; margin-bottom: 20px;
+}
+.sub-category-item { text-align: center; cursor: pointer; transition: transform 0.2s; }
+.sub-category-item:hover { transform: translateY(-2px); }
+.sub-category-icon {
+  width: 60px; height: 60px; border-radius: 12px; background: var(--bg-gray);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px; margin: 0 auto 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+.sub-category-name { font-size: 12px; color: var(--text-main); line-height: 1.4; }
+.product-list-section { padding: 12px; }
+.product-list-title { font-size: 14px; font-weight: 600; color: var(--text-main); margin-bottom: 12px; }
+
+/* ==========================================================
+   PAGE: Cart (购物车)
+   ========================================================== */
+.nav-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px; background: white;
+  border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50;
+}
+.nav-bar svg {
+  width: 22px; height: 22px; stroke: var(--text-main);
+  fill: none; stroke-width: 1.5; cursor: pointer;
+}
+.nav-title { font-size: 17px; font-weight: 600; }
+
+.cart-list { padding: 12px 16px; }
+.cart-group-title {
+  font-size: 12px; color: var(--text-light); margin-bottom: 10px;
+  padding-left: 4px; display: flex; align-items: center; gap: 6px;
+}
+.cart-group-title::before { content: '🛃'; }
+.cart-item {
+  display: flex; gap: 12px; padding: 14px; background: white;
+  border-radius: 12px; margin-bottom: 10px; box-shadow: var(--shadow); position: relative;
+}
+.cart-check {
+  width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--border);
+  flex-shrink: 0; margin-top: 20px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.cart-check.checked { background: var(--primary); border-color: var(--primary); }
+.cart-check.checked::after { content: '✓'; color: white; font-size: 12px; font-weight: 700; }
+.cart-img {
+  width: 80px; height: 80px; border-radius: 8px; background: var(--bg-gray);
+  flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+  font-size: 28px; opacity: 0.3;
+}
+.cart-info { flex: 1; }
+.cart-name {
+  font-size: 13px; line-height: 1.4; display: -webkit-box;
+  -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  margin-bottom: 4px; color: var(--text-main);
+}
+.cart-spec { font-size: 11px; color: var(--text-gray); margin-bottom: 8px; }
+.cart-bottom { display: flex; justify-content: space-between; align-items: center; }
+.cart-price { font-size: 16px; font-weight: 700; color: var(--primary); }
+.cart-price small {
+  font-size: 11px; color: var(--text-gray); text-decoration: line-through;
+  font-weight: 400; margin-left: 4px;
+}
+.cart-qty { display: flex; align-items: center; gap: 8px; }
+.qty-btn {
+  width: 24px; height: 24px; border-radius: 50%; background: var(--bg-gray);
+  border: 1px solid var(--border); color: var(--text-main);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 14px;
+}
+.qty-num { font-size: 13px; min-width: 20px; text-align: center; }
+.cart-tag {
+  position: absolute; top: 10px; right: 10px; font-size: 9px;
+  padding: 2px 6px; border-radius: 4px;
+  background: rgba(255,107,0,0.1); color: var(--primary); border: 1px solid var(--primary);
+}
+.cart-split {
+  margin: 12px 16px; padding: 10px 14px;
+  background: rgba(255,107,0,0.05); border-radius: 8px; border: 1px dashed var(--primary);
+}
+.cart-split-title { font-size: 12px; color: var(--primary); margin-bottom: 4px; font-weight: 600; }
+.cart-split-desc { font-size: 11px; color: var(--text-light); }
+.cart-summary {
+  margin: 16px 16px; padding: 14px; background: white;
+  border-radius: 12px; box-shadow: var(--shadow);
+}
+.summary-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 13px; }
+.summary-row .label { color: var(--text-light); }
+.summary-row .value { color: var(--text-main); }
+.summary-row .value.tax { color: var(--primary); font-size: 12px; }
+.summary-total {
+  display: flex; justify-content: space-between;
+  padding-top: 10px; border-top: 1px solid var(--border); font-weight: 600;
+}
+.summary-total .total-price { font-size: 18px; color: var(--primary); }
+
+.cart-bottom-bar {
+  position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 414px; max-width: 100%; background: white;
+  border-top: 1px solid var(--border);
+  display: flex; align-items: center; padding: 10px 16px 24px; z-index: 100;
+}
+.bar-check { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+.bar-check-box {
+  width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+}
+.bar-check-box.checked { background: var(--primary); border-color: var(--primary); }
+.bar-check-box.checked::after { content: '✓'; color: white; font-size: 10px; font-weight: 700; }
+.bar-check span { font-size: 12px; color: var(--text-light); }
+.bar-info { flex: 1; text-align: right; padding-right: 12px; }
+.bar-total { font-size: 16px; font-weight: 700; color: var(--primary); }
+.bar-count { font-size: 11px; color: var(--text-gray); }
+.btn-checkout {
+  background: var(--primary); color: white; border: none;
+  padding: 10px 24px; border-radius: 24px; font-size: 14px; font-weight: 600; cursor: pointer;
+}
+
+/* ==========================================================
+   PAGE: Product Detail (商品详情)
+   ========================================================== */
+.detail-nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px; position: sticky; top: 0;
+  background: rgba(255,255,255,0.95); backdrop-filter: blur(20px);
+  z-index: 50; border-bottom: 1px solid var(--border);
+}
+.detail-nav svg {
+  width: 22px; height: 22px; stroke: var(--text-main);
+  fill: none; stroke-width: 1.5; cursor: pointer;
+}
+.nav-icons { display: flex; gap: 16px; }
+.swiper {
+  position: relative; width: 100%; aspect-ratio: 1; background: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+}
+.swiper-placeholder { font-size: 80px; opacity: 0.2; }
+.swiper-counter {
+  position: absolute; bottom: 16px; right: 20px;
+  background: rgba(0,0,0,0.6); color: white;
+  font-size: 11px; padding: 3px 10px; border-radius: 12px;
+}
+.swiper-indicator {
+  position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%);
+  display: flex; gap: 6px;
+}
+.swiper-indicator span {
+  width: 6px; height: 6px; border-radius: 50%; background: rgba(0,0,0,0.2);
+}
+.swiper-indicator span.active { background: var(--primary); width: 16px; border-radius: 3px; }
+.price-section {
+  padding: 16px 16px 12px; background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+.price-row { display: flex; align-items: baseline; gap: 8px; margin-bottom: 6px; }
+.price-section .price-current { font-size: 28px; }
+.price-discount {
+  font-size: 11px; color: white; background: var(--secondary);
+  padding: 2px 8px; border-radius: 4px; font-weight: 600;
+}
+.product-title-section {
+  padding: 14px 16px; background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+.product-title-section h1 {
+  font-size: 16px; font-weight: 600; line-height: 1.5; margin-bottom: 8px; color: var(--text-main);
+}
+.product-title-section .tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.tag {
+  font-size: 10px; padding: 2px 8px; border-radius: 4px;
+  border: 1px solid var(--primary); color: var(--primary);
+}
+.tag.highlight { background: var(--primary); color: white; }
+.product-brand-row {
+  display: flex; align-items: center; gap: 6px;
+  margin-bottom: 8px; font-size: 13px; color: var(--text-light);
+}
+.info-row {
+  display: flex; padding: 14px 16px; align-items: center;
+  background: var(--bg); border-bottom: 1px solid var(--border); cursor: pointer;
+}
+.info-label { font-size: 13px; color: var(--text-light); width: 70px; flex-shrink: 0; }
+.info-value { flex: 1; font-size: 13px; color: var(--text-main); }
+.info-arrow { color: var(--text-gray); font-size: 14px; }
+.sku-section {
+  padding: 16px; background: var(--bg); border-bottom: 1px solid var(--border);
+}
+.sku-title { font-size: 13px; color: var(--text-light); margin-bottom: 10px; }
+.sku-options { display: flex; gap: 8px; flex-wrap: wrap; }
+.sku-opt {
+  padding: 6px 16px; border-radius: 20px; font-size: 12px;
+  border: 1px solid var(--border); color: var(--text-main);
+  cursor: pointer; background: white;
+}
+.sku-opt.active {
+  background: var(--primary); color: white;
+  border-color: var(--primary); font-weight: 600;
+}
+.detail-section { padding: 16px; background: var(--bg); margin-top: 10px; }
+.detail-title {
+  font-size: 15px; font-weight: 600; margin-bottom: 16px;
+  text-align: center; position: relative;
+}
+.detail-title::before, .detail-title::after {
+  content: ''; position: absolute; top: 50%;
+  width: 40px; height: 1px; background: var(--border);
+}
+.detail-title::before { left: 20px; }
+.detail-title::after { right: 20px; }
+.detail-img {
+  width: 100%; aspect-ratio: 3/4; background: var(--bg-gray);
+  border-radius: 8px; margin-bottom: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 60px; opacity: 0.15;
+}
+.detail-text { font-size: 13px; color: var(--text-light); line-height: 1.8; }
+.detail-bottom-bar {
+  position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 414px; max-width: 100%; background: white;
+  border-top: 1px solid var(--border);
+  display: flex; align-items: center; padding: 8px 16px 24px; gap: 10px; z-index: 100;
+}
+.bar-icon { text-align: center; padding: 4px 8px; cursor: pointer; }
+.bar-icon svg {
+  width: 20px; height: 20px; stroke: var(--text-light);
+  fill: none; stroke-width: 1.5;
+}
+.bar-icon span { display: block; font-size: 9px; color: var(--text-light); margin-top: 2px; }
+.btn-cart {
+  flex: 1; padding: 12px; border-radius: 24px;
+  border: 1px solid var(--primary); background: white;
+  color: var(--primary); font-size: 14px; font-weight: 600; cursor: pointer;
+}
+.btn-buy {
+  flex: 1; padding: 12px; border-radius: 24px; border: none;
+  background: var(--primary); color: white;
+  font-size: 14px; font-weight: 600; cursor: pointer;
+}
+
+/* ==========================================================
+   PAGE: Profile (我的)
+   ========================================================== */
+.profile-status-bar {
+  height: 44px;
+  background: linear-gradient(180deg, #FF6B00 0%, #FF8C33 100%);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 16px; color: white; font-size: 15px; font-weight: 600;
+}
+.profile-status-bar-left { font-size: 15px; font-weight: 700; }
+.profile-status-bar-right { display: flex; align-items: center; gap: 8px; }
+.profile-status-bar-right svg { width: 16px; height: 16px; stroke: white; fill: none; stroke-width: 2; }
+
+.profile-header {
+  background: linear-gradient(180deg, #FF6B00 0%, #FF8C33 100%);
+  padding: 20px 16px 30px; border-radius: 0 0 24px 24px;
+}
+.profile-top { display: flex; align-items: center; gap: 16px; }
+.avatar {
+  width: 72px; height: 72px; border-radius: 50%;
+  background: rgba(255,255,255,0.2); border: 3px solid rgba(255,255,255,0.4);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px; color: white; font-weight: 600;
+}
+.profile-info { flex: 1; }
+.nickname { font-size: 20px; font-weight: 600; color: white; margin-bottom: 6px; }
+.level {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 12px; color: white; background: rgba(255,255,255,0.25);
+  padding: 4px 12px; border-radius: 16px; margin-bottom: 6px;
+}
+.phone { font-size: 12px; color: rgba(255,255,255,0.8); }
+.profile-arrow {
+  width: 28px; height: 28px; background: rgba(255,255,255,0.2);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer;
+}
+.profile-arrow svg { width: 16px; height: 16px; stroke: white; fill: none; stroke-width: 2; }
+
+.user-stats {
+  display: flex; background: white; margin: -20px 12px 12px;
+  border-radius: 16px; padding: 16px; box-shadow: var(--shadow);
+}
+.stat-item { flex: 1; text-align: center; cursor: pointer; padding: 8px 0; }
+.stat-item:not(:last-child) { border-right: 1px solid var(--border); }
+.stat-num { font-size: 20px; font-weight: 700; color: var(--text-main); margin-bottom: 4px; }
+.stat-label { font-size: 12px; color: var(--text-gray); }
+
+.vip-card {
+  margin: 0 12px 12px; padding: 16px;
+  background: linear-gradient(135deg, #FFF9F5, #FFFAF0);
+  border-radius: 16px; border: 1px solid rgba(255,107,0,0.15);
+}
+.vip-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.vip-label { display: flex; align-items: center; gap: 6px; font-size: 15px; font-weight: 600; color: var(--primary); }
+.vip-renew { font-size: 12px; color: var(--primary); cursor: pointer; }
+.vip-bar-container { margin-bottom: 8px; }
+.vip-bar { height: 6px; background: rgba(255,255,255,0.8); border-radius: 3px; overflow: hidden; }
+.vip-fill { height: 100%; width: 65%; background: linear-gradient(90deg, var(--primary-dark), var(--primary)); border-radius: 3px; }
+.vip-progress { font-size: 12px; color: var(--text-light); text-align: right; }
+.vip-benefits { display: flex; gap: 16px; margin-top: 12px; flex-wrap: wrap; }
+.vip-benefit { font-size: 12px; color: var(--text-light); display: flex; align-items: center; gap: 4px; }
+.vip-benefit::before { content: '✓'; color: var(--primary); font-size: 14px; }
+
+.profile-section {
+  background: white; margin: 0 12px 12px;
+  border-radius: 16px; overflow: hidden;
+}
+.profile-section-title {
+  padding: 16px 16px 12px; font-size: 15px; font-weight: 600;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.profile-section-title a { font-size: 12px; color: var(--text-gray); text-decoration: none; }
+
+.order-tabs { display: flex; justify-content: space-around; padding: 0 8px 16px; }
+.order-tab {
+  text-align: center; cursor: pointer; padding: 8px 8px;
+  position: relative; width: 60px;
+}
+.order-tab svg {
+  width: 28px; height: 28px; stroke: var(--text-gray);
+  fill: none; stroke-width: 1.5; display: block; margin: 0 auto 6px;
+}
+.order-tab.active svg { stroke: var(--primary); }
+.order-tab span { font-size: 11px; color: var(--text-gray); display: block; }
+.order-tab.active span { color: var(--text-main); }
+.badge {
+  position: absolute; top: 4px; right: 4px; background: var(--secondary);
+  color: white; font-size: 10px; min-width: 18px; height: 18px;
+  border-radius: 9px; display: flex; align-items: center;
+  justify-content: center; font-weight: 600;
+}
+
+.tools-grid { display: grid; grid-template-columns: repeat(4, 1fr); padding: 8px 0 16px; }
+.tool-item { text-align: center; cursor: pointer; padding: 12px 0; }
+.tool-item svg {
+  width: 28px; height: 28px; stroke: var(--text-gray);
+  fill: none; stroke-width: 1.5; display: block; margin: 0 auto 8px;
+}
+.tool-item span { font-size: 12px; color: var(--text-light); }
+
+.menu-list { margin: 0 12px 12px; background: white; border-radius: 16px; overflow: hidden; }
+.menu-item {
+  display: flex; align-items: center; padding: 16px;
+  border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.2s;
+}
+.menu-item:last-child { border-bottom: none; }
+.menu-item:active { background: var(--bg-gray); }
+.menu-icon {
+  width: 24px; height: 24px; display: flex; align-items: center;
+  justify-content: center; margin-right: 14px;
+}
+.menu-icon svg { width: 20px; height: 20px; stroke: var(--text-light); fill: none; stroke-width: 1.5; }
+.menu-text { flex: 1; font-size: 14px; color: var(--text-main); }
+.menu-arrow { color: var(--text-gray); font-size: 16px; }
+.menu-badge { font-size: 12px; color: var(--secondary); font-weight: 600; margin-right: 8px; }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     PAGE: Home (首页)
+     ============================================================ -->
+<div class="page active" id="page-home">
+
+  <!-- Status Bar -->
+  <div class="status-bar">
+    <span>9:41</span>
+    <span>CBD商城</span>
+    <span style="display:flex;gap:4px;">
+      <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 11h2v4H1zM5 7h2v8H5zM9 3h2v12H9zM13 0h2v15h-2z"/></svg>
+      <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1h14v10H1z"/><path d="M5 14h6M8 11v3"/></svg>
+    </span>
+  </div>
+
+  <!-- Search Header -->
+  <div class="search-header">
+    <div class="scan-btn">
+      <svg viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/></svg>
+    </div>
+    <div class="search-box">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" placeholder="搜索商品、品牌">
+    </div>
+    <div class="message-btn">
+      <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      <div class="message-badge"></div>
+    </div>
+  </div>
+
+  <!-- Banner -->
+  <div class="banner">
+    <div class="banner-content">
+      <div class="banner-tag">限时特惠</div>
+      <div class="banner-title">新人专享礼包</div>
+      <div class="banner-desc">注册即送100元优惠券</div>
+      <a class="banner-btn" href="#">立即领取</a>
+    </div>
+    <div class="banner-dots">
+      <span class="active"></span><span></span><span></span>
+    </div>
+  </div>
+
+  <!-- Category -->
+  <div class="category-grid">
+    <div class="category-item" onclick="switchTab('category')"><div class="category-icon">👜</div><div class="category-name">箱包</div></div>
+    <div class="category-item" onclick="switchTab('category')"><div class="category-icon">👗</div><div class="category-name">服饰</div></div>
+    <div class="category-item" onclick="switchTab('category')"><div class="category-icon">💄</div><div class="category-name">美妆</div></div>
+    <div class="category-item" onclick="switchTab('category')"><div class="category-icon">⌚</div><div class="category-name">腕表</div></div>
+    <div class="category-item" onclick="switchTab('category')"><div class="category-icon">👟</div><div class="category-name">鞋履</div></div>
+    <div class="category-item" onclick="switchTab('category')"><div class="category-icon">💎</div><div class="category-name">珠宝</div></div>
+    <div class="category-item" onclick="switchTab('category')"><div class="category-icon">🧴</div><div class="category-name">护肤</div></div>
+    <div class="category-item" onclick="switchTab('category')"><div class="category-icon">🏠</div><div class="category-name">家居</div></div>
+    <div class="category-item" onclick="switchTab('category')"><div class="category-icon">🍷</div><div class="category-name">酒水</div></div>
+    <div class="category-item" onclick="switchTab('category')"><div class="category-icon">📱</div><div class="category-name">数码</div></div>
+  </div>
+
+  <!-- Flash Sale -->
+  <div class="flash-sale">
+    <div class="flash-header">
+      <div class="flash-title">⚡ 限时秒杀</div>
+      <div class="flash-timer">
+        <span>02</span><em>:</em><span>38</span><em>:</em><span>15</span>
+      </div>
+    </div>
+    <div class="flash-list">
+      <div class="flash-item" onclick="showLoginModal()">
+        <div class="flash-item-img">🛍</div>
+        <div class="flash-item-price">¥2,880</div>
+        <div class="flash-item-orig">¥5,600</div>
+      </div>
+      <div class="flash-item" onclick="showLoginModal()">
+        <div class="flash-item-img">🛍</div>
+        <div class="flash-item-price">¥1,980</div>
+        <div class="flash-item-orig">¥3,800</div>
+      </div>
+      <div class="flash-item" onclick="showLoginModal()">
+        <div class="flash-item-img">🛍</div>
+        <div class="flash-item-price">¥3,280</div>
+        <div class="flash-item-orig">¥6,500</div>
+      </div>
+      <div class="flash-item" onclick="showLoginModal()">
+        <div class="flash-item-img">🛍</div>
+        <div class="flash-item-price">¥1,580</div>
+        <div class="flash-item-orig">¥2,900</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recommended Products -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">为你推荐</div>
+      <a class="section-more" href="#">查看更多 ›</a>
+    </div>
+    <div class="product-grid">
+      <div class="product-card" onclick="switchTab('detail')">
+        <div class="product-img">
+          <div class="product-img-placeholder">🛍</div>
+          <div class="product-tag">热销</div>
+        </div>
+        <div class="product-info">
+          <div class="product-name">迪奥经典款手提包 老花帆布 中号</div>
+          <div class="product-price">
+            <span class="price-current">¥18,800</span>
+            <span class="price-original">¥26,500</span>
+          </div>
+          <div class="sales-count">已售 328</div>
+        </div>
+      </div>
+      <div class="product-card" onclick="switchTab('detail')">
+        <div class="product-img">
+          <div class="product-img-placeholder">🛍</div>
+          <div class="product-tag">新品</div>
+        </div>
+        <div class="product-info">
+          <div class="product-name">Gucci Marmont系列链条包 红色</div>
+          <div class="product-price">
+            <span class="price-current">¥12,600</span>
+            <span class="price-original">¥18,900</span>
+          </div>
+          <div class="sales-count">已售 256</div>
+        </div>
+      </div>
+      <div class="product-card" onclick="switchTab('detail')">
+        <div class="product-img">
+          <div class="product-img-placeholder">🛍</div>
+          <div class="product-tag">限时特惠</div>
+        </div>
+        <div class="product-info">
+          <div class="product-name">海蓝之谜经典面霜 60ml</div>
+          <div class="product-price">
+            <span class="price-current">¥2,180</span>
+            <span class="price-original">¥3,200</span>
+          </div>
+          <div class="sales-count">已售 892</div>
+        </div>
+      </div>
+      <div class="product-card" onclick="switchTab('detail')">
+        <div class="product-img">
+          <div class="product-img-placeholder">🛍</div>
+          <div class="product-tag">跨境</div>
+        </div>
+        <div class="product-info">
+          <div class="product-name">香奈儿经典款CF口红包</div>
+          <div class="product-price">
+            <span class="price-current">¥28,800</span>
+            <span class="price-original">¥38,500</span>
+          </div>
+          <div class="sales-count">已售 156</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-spacer"></div>
+</div>
+
+<!-- ============================================================
+     PAGE: Category (分类)
+     ============================================================ -->
+<div class="page" id="page-category">
+
+  <!-- Search Header -->
+  <div class="search-header">
+    <div class="search-box">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" placeholder="搜索商品、品牌">
+    </div>
+    <div class="message-btn">
+      <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      <div class="message-badge"></div>
+    </div>
+  </div>
+
+  <!-- Category Layout -->
+  <div class="category-layout">
+    <!-- Left Sidebar -->
+    <div class="category-sidebar">
+      <div class="sidebar-item active" onclick="selectCategory(this, 'bags')">箱包</div>
+      <div class="sidebar-item" onclick="selectCategory(this, 'clothing')">服饰</div>
+      <div class="sidebar-item" onclick="selectCategory(this, 'beauty')">美妆</div>
+      <div class="sidebar-item" onclick="selectCategory(this, 'watch')">腕表</div>
+      <div class="sidebar-item" onclick="selectCategory(this, 'shoes')">鞋履</div>
+      <div class="sidebar-item" onclick="selectCategory(this, 'jewelry')">珠宝</div>
+      <div class="sidebar-item" onclick="selectCategory(this, 'skincare')">护肤</div>
+      <div class="sidebar-item" onclick="selectCategory(this, 'home')">家居</div>
+      <div class="sidebar-item" onclick="selectCategory(this, 'wine')">酒水</div>
+      <div class="sidebar-item" onclick="selectCategory(this, 'digital')">数码</div>
+    </div>
+
+    <!-- Right Content -->
+    <div class="category-content" id="categoryContent">
+      <div class="category-banner">奢侈箱包专场</div>
+      <div class="sub-category-section">
+        <div class="sub-category-title">热门分类</div>
+        <div class="sub-category-grid">
+          <div class="sub-category-item" onclick="switchTab('detail')">
+            <div class="sub-category-icon">👜</div>
+            <div class="sub-category-name">手提包</div>
+          </div>
+          <div class="sub-category-item" onclick="switchTab('detail')">
+            <div class="sub-category-icon">🎒</div>
+            <div class="sub-category-name">双肩包</div>
+          </div>
+          <div class="sub-category-item" onclick="switchTab('detail')">
+            <div class="sub-category-icon">💼</div>
+            <div class="sub-category-name">公文包</div>
+          </div>
+          <div class="sub-category-item" onclick="switchTab('detail')">
+            <div class="sub-category-icon">🎒</div>
+            <div class="sub-category-name">斜挎包</div>
+          </div>
+          <div class="sub-category-item" onclick="switchTab('detail')">
+            <div class="sub-category-icon">👜</div>
+            <div class="sub-category-name">单肩包</div>
+          </div>
+          <div class="sub-category-item" onclick="switchTab('detail')">
+            <div class="sub-category-icon">💼</div>
+            <div class="sub-category-name">旅行箱</div>
+          </div>
+        </div>
+      </div>
+      <div class="product-list-section">
+        <div class="product-list-title">热门商品</div>
+        <div class="product-grid">
+          <div class="product-card" onclick="switchTab('detail')">
+            <div class="product-img">
+              <div class="product-img-placeholder">🛍</div>
+              <div class="product-tag">热销</div>
+            </div>
+            <div class="product-info">
+              <div class="product-name">迪奥经典款手提包 老花帆布</div>
+              <div class="product-price">
+                <span class="price-current">¥18,800</span>
+                <span class="price-original">¥26,500</span>
+              </div>
+            </div>
+          </div>
+          <div class="product-card" onclick="switchTab('detail')">
+            <div class="product-img">
+              <div class="product-img-placeholder">🛍</div>
+              <div class="product-tag">新品</div>
+            </div>
+            <div class="product-info">
+              <div class="product-name">Gucci Marmont系列链条包</div>
+              <div class="product-price">
+                <span class="price-current">¥12,600</span>
+                <span class="price-original">¥18,900</span>
+              </div>
+            </div>
+          </div>
+          <div class="product-card" onclick="switchTab('detail')">
+            <div class="product-img">
+              <div class="product-img-placeholder">🛍</div>
+              <div class="product-tag">限时</div>
+            </div>
+            <div class="product-info">
+              <div class="product-name">香奈儿经典款CF口红包</div>
+              <div class="product-price">
+                <span class="price-current">¥28,800</span>
+                <span class="price-original">¥38,500</span>
+              </div>
+            </div>
+          </div>
+          <div class="product-card" onclick="switchTab('detail')">
+            <div class="product-img">
+              <div class="product-img-placeholder">🛍</div>
+              <div class="product-tag">跨境</div>
+            </div>
+            <div class="product-info">
+              <div class="product-name">爱马仕铂金包 黑色牛皮</div>
+              <div class="product-price">
+                <span class="price-current">¥68,000</span>
+                <span class="price-original">¥85,000</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     PAGE: Cart (购物车)
+     ============================================================ -->
+<div class="page" id="page-cart">
+
+  <div class="nav-bar">
+    <svg viewBox="0 0 24 24" onclick="switchTab('home')"><polyline points="15 18 9 12 15 6"/></svg>
+    <span class="nav-title">购物车 <span style="font-size:13px;color:var(--text-gray);font-weight:400;">(3)</span></span>
+    <svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:var(--text-light);fill:none;stroke-width:1.5;cursor:pointer;"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+  </div>
+
+  <div class="cart-list">
+    <div class="cart-group-title">保税仓商品 · 清关后发货</div>
+
+    <div class="cart-item">
+      <div class="cart-check checked"></div>
+      <div class="cart-img">🛍</div>
+      <div class="cart-info">
+        <div class="cart-name">迪奥经典款Lady Dior手提包 老花帆布款 中号</div>
+        <div class="cart-spec">老花帆布 / 中号</div>
+        <div class="cart-bottom">
+          <div class="cart-price">¥18,800 <small>¥26,500</small></div>
+          <div class="cart-qty">
+            <span class="qty-btn">-</span>
+            <span class="qty-num">1</span>
+            <span class="qty-btn">+</span>
+          </div>
+        </div>
+      </div>
+      <div class="cart-tag">跨境保税</div>
+    </div>
+
+    <div class="cart-item">
+      <div class="cart-check checked"></div>
+      <div class="cart-img">🛍</div>
+      <div class="cart-info">
+        <div class="cart-name">海蓝之谜经典面霜 60ml</div>
+        <div class="cart-spec">60ml</div>
+        <div class="cart-bottom">
+          <div class="cart-price">¥2,180 <small>¥3,200</small></div>
+          <div class="cart-qty">
+            <span class="qty-btn">-</span>
+            <span class="qty-num">1</span>
+            <span class="qty-btn">+</span>
+          </div>
+        </div>
+      </div>
+      <div class="cart-tag">跨境保税</div>
+    </div>
+
+    <div class="cart-split">
+      <div class="cart-split-title">📦 自动拆单提示</div>
+      <div class="cart-split-desc">保税品和一般贸易商品将自动拆分为两个订单分别发货</div>
+    </div>
+
+    <div class="cart-group-title" style="margin-top:12px;">一般贸易商品 · 国内发货</div>
+
+    <div class="cart-item">
+      <div class="cart-check"></div>
+      <div class="cart-img">🛍</div>
+      <div class="cart-info">
+        <div class="cart-name">Gucci Marmont系列链条包</div>
+        <div class="cart-spec">红色 / 小号</div>
+        <div class="cart-bottom">
+          <div class="cart-price">¥12,600 <small>¥18,900</small></div>
+          <div class="cart-qty">
+            <span class="qty-btn">-</span>
+            <span class="qty-num">1</span>
+            <span class="qty-btn">+</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cart-summary">
+    <div class="summary-row"><span class="label">商品金额</span><span class="value">¥33,580.00</span></div>
+    <div class="summary-row"><span class="label">运费</span><span class="value">¥0.00</span></div>
+    <div class="summary-row"><span class="label">跨境综合税</span><span class="value tax">¥1,848.00</span></div>
+    <div class="summary-row"><span class="label">优惠</span><span class="value" style="color:#4CAF50;">-¥800.00</span></div>
+    <div class="summary-total"><span>合计</span><span class="total-price">¥34,628.00</span></div>
+  </div>
+
+  <div class="bottom-spacer" style="height:80px;"></div>
+
+  <div class="cart-bottom-bar">
+    <div class="bar-check">
+      <div class="bar-check-box checked"></div>
+      <span>全选</span>
+    </div>
+    <div class="bar-info">
+      <div class="bar-total">¥34,628</div>
+      <div class="bar-count">含税费 ¥1,848</div>
+    </div>
+    <button class="btn-checkout" onclick="showLoginModal()">结算(2)</button>
+  </div>
+</div>
+
+<!-- ============================================================
+     PAGE: Product Detail (商品详情)
+     ============================================================ -->
+<div class="page" id="page-detail">
+
+  <!-- Nav -->
+  <div class="detail-nav">
+    <svg viewBox="0 0 24 24" onclick="switchTab('home')"><polyline points="15 18 9 12 15 6"/></svg>
+    <span style="font-size:15px;font-weight:600;">商品详情</span>
+    <div class="nav-icons">
+      <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+      <svg viewBox="0 0 24 24" onclick="switchTab('cart')"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+    </div>
+  </div>
+
+  <!-- Image Swiper -->
+  <div class="swiper">
+    <div class="swiper-placeholder">🛍</div>
+    <div class="swiper-counter">1/5</div>
+    <div class="swiper-indicator">
+      <span class="active"></span><span></span><span></span><span></span><span></span>
+    </div>
+  </div>
+
+  <!-- Price -->
+  <div class="price-section">
+    <div class="price-row">
+      <span class="price-current">¥18,800</span>
+      <span class="price-original">¥26,500</span>
+      <span class="price-discount">7.1折</span>
+    </div>
+  </div>
+
+  <!-- Title -->
+  <div class="product-title-section">
+    <div class="product-brand-row">
+      <span>DIOR</span>
+      <span style="color:var(--text-gray);">|</span>
+      <span style="font-size:11px;">法国品牌</span>
+    </div>
+    <h1>迪奥经典款Lady Dior手提包 老花帆布款 中号</h1>
+    <div class="tags">
+      <span class="tag highlight">跨境保税</span>
+      <span class="tag">正品保障</span>
+      <span class="tag">7天可退</span>
+      <span class="tag">海关清关</span>
+    </div>
+  </div>
+
+  <!-- SKU -->
+  <div class="sku-section">
+    <div class="sku-title">颜色</div>
+    <div class="sku-options">
+      <span class="sku-opt active">老花帆布</span>
+      <span class="sku-opt">黑色羊皮</span>
+      <span class="sku-opt">米白色</span>
+    </div>
+  </div>
+  <div class="sku-section">
+    <div class="sku-title">尺寸</div>
+    <div class="sku-options">
+      <span class="sku-opt">小号</span>
+      <span class="sku-opt active">中号</span>
+      <span class="sku-opt">大号</span>
+    </div>
+  </div>
+
+  <!-- Info Rows -->
+  <div class="info-row">
+    <span class="info-label">配送</span>
+    <span class="info-value">预计3-7个工作日 · 保税仓发货</span>
+    <span class="info-arrow">›</span>
+  </div>
+  <div class="info-row">
+    <span class="info-label">运费</span>
+    <span class="info-value">新用户首单免运费</span>
+    <span class="info-arrow">›</span>
+  </div>
+  <div class="info-row">
+    <span class="info-label">税费</span>
+    <span class="info-value">跨境综合税 ¥1,128.00</span>
+    <span class="info-arrow">›</span>
+  </div>
+  <div class="info-row">
+    <span class="info-label">服务</span>
+    <span class="info-value">正品保证 · 假一赔十 · 极速退款</span>
+    <span class="info-arrow">›</span>
+  </div>
+
+  <!-- Detail -->
+  <div class="detail-section">
+    <div class="detail-title">商品详情</div>
+    <div class="detail-img">🛍</div>
+    <div class="detail-text">
+      <p>Lady Dior是迪奥最具标志性的手袋之一，以其优雅的线条和精湛的工艺著称。</p>
+      <p style="margin-top:10px;">• 材质：涂层帆布/羊皮</p>
+      <p>• 尺寸：24 × 20 × 11 cm</p>
+      <p>• 产地：意大利</p>
+      <p>• 配件：可调节肩带、防尘袋、身份卡</p>
+    </div>
+  </div>
+
+  <div class="bottom-spacer" style="height:80px;"></div>
+
+  <!-- Bottom Bar -->
+  <div class="detail-bottom-bar">
+    <div class="bar-icon">
+      <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <span>客服</span>
+    </div>
+    <div class="bar-icon" onclick="switchTab('cart')">
+      <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+      <span>购物车</span>
+    </div>
+    <button class="btn-cart" onclick="showLoginModal()">加入购物车</button>
+    <button class="btn-buy" onclick="showLoginModal()">立即购买</button>
+  </div>
+</div>
+
+<!-- ============================================================
+     PAGE: Profile (我的)
+     ============================================================ -->
+<div class="page" id="page-profile">
+
+  <!-- Status Bar -->
+  <div class="profile-status-bar">
+    <div class="profile-status-bar-left">9:41</div>
+    <div class="profile-status-bar-right">
+      <svg viewBox="0 0 24 24"><path d="M1 11h2v4H1zM5 7h2v8H5zM9 3h2v12H9zM13 0h2v15h-2z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M1 1h14v10H1z"/><path d="M5 14h6M8 11v3"/></svg>
+    </div>
+  </div>
+
+  <!-- Profile Header -->
+  <div class="profile-header">
+    <div class="profile-top">
+      <div class="avatar">L</div>
+      <div class="profile-info">
+        <div class="nickname">刘女士</div>
+        <div class="level">👑 黑金会员</div>
+        <div class="phone">138****8888</div>
+      </div>
+      <div class="profile-arrow">
+        <svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- User Stats -->
+  <div class="user-stats">
+    <div class="stat-item"><div class="stat-num">28</div><div class="stat-label">全部订单</div></div>
+    <div class="stat-item"><div class="stat-num">5</div><div class="stat-label">优惠券</div></div>
+    <div class="stat-item"><div class="stat-num">6,820</div><div class="stat-label">积分</div></div>
+    <div class="stat-item"><div class="stat-num">12</div><div class="stat-label">收藏</div></div>
+  </div>
+
+  <!-- VIP Card -->
+  <div class="vip-card">
+    <div class="vip-header">
+      <span class="vip-label">👑 黑金会员</span>
+      <span class="vip-renew">续费享95折 ›</span>
+    </div>
+    <div class="vip-bar-container">
+      <div class="vip-bar"><div class="vip-fill"></div></div>
+      <div class="vip-progress">再消费 ¥12,400 升级钻石会员</div>
+    </div>
+    <div class="vip-benefits">
+      <span class="vip-benefit">专属折扣</span>
+      <span class="vip-benefit">优先发货</span>
+      <span class="vip-benefit">生日礼遇</span>
+      <span class="vip-benefit">专属客服</span>
+    </div>
+  </div>
+
+  <!-- Orders Section -->
+  <div class="profile-section">
+    <div class="profile-section-title">我的订单 <a href="#">全部订单 ›</a></div>
+    <div class="order-tabs">
+      <div class="order-tab">
+        <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M2 10h20"/></svg>
+        <span>待付款</span>
+        <div class="badge">2</div>
+      </div>
+      <div class="order-tab">
+        <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M16 17h6M19 14v6"/></svg>
+        <span>待发货</span>
+        <div class="badge">1</div>
+      </div>
+      <div class="order-tab">
+        <svg viewBox="0 0 24 24"><rect x="2" y="2" width="14" height="14" rx="2"/><path d="m17 7 5 3v6H17"/><circle cx="5" cy="19" r="2"/><circle cx="18" cy="19" r="2"/></svg>
+        <span>待收货</span>
+      </div>
+      <div class="order-tab">
+        <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        <span>已完成</span>
+      </div>
+      <div class="order-tab">
+        <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+        <span>售后</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tools Section -->
+  <div class="profile-section">
+    <div class="profile-section-title">我的工具</div>
+    <div class="tools-grid">
+      <div class="tool-item"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>身份认证</span></div>
+      <div class="tool-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2z"/></svg><span>跨境额度</span></div>
+      <div class="tool-item"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="18" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg><span>发票管理</span></div>
+      <div class="tool-item"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>清关资料</span></div>
+    </div>
+  </div>
+
+  <!-- Menu List -->
+  <div class="menu-list">
+    <div class="menu-item">
+      <div class="menu-icon"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+      <span class="menu-text">收货地址</span>
+      <span class="menu-arrow">›</span>
+    </div>
+    <div class="menu-item">
+      <div class="menu-icon"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="18" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></div>
+      <span class="menu-text">优惠券</span>
+      <span class="menu-badge">5张可用</span>
+      <span class="menu-arrow">›</span>
+    </div>
+    <div class="menu-item">
+      <div class="menu-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+      <span class="menu-text">浏览记录</span>
+      <span class="menu-arrow">›</span>
+    </div>
+    <div class="menu-item">
+      <div class="menu-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div>
+      <span class="menu-text">我的收藏</span>
+      <span class="menu-arrow">›</span>
+    </div>
+    <div class="menu-item">
+      <div class="menu-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+      <span class="menu-text">消息中心</span>
+      <span class="menu-badge">3</span>
+      <span class="menu-arrow">›</span>
+    </div>
+    <div class="menu-item">
+      <div class="menu-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09a1.65 1.65 0 00-1-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09a1.65 1.65 0 001.51-1 1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06a1.65 1.65 0 001.82.33h.09a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9c.26.604.852.997 1.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></div>
+      <span class="menu-text">设置</span>
+      <span class="menu-arrow">›</span>
+    </div>
+  </div>
+
+  <div class="bottom-spacer"></div>
+</div>
+
+<!-- ============================================================
+     Tab Bar (共享底部导航)
+     ============================================================ -->
+<div class="tab-bar" id="mainTabBar">
+  <div class="tab-item active" onclick="switchTab('home')">
+    <svg viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <span>首页</span>
+  </div>
+  <div class="tab-item" onclick="switchTab('category')">
+    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+    <span>分类</span>
+  </div>
+  <div class="tab-item" onclick="switchTab('cart')">
+    <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+    <span>购物车</span>
+  </div>
+  <div class="tab-item" onclick="switchTab('profile')">
+    <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <span>我的</span>
+  </div>
+</div>
+
+<!-- Login Modal -->
+<div class="login-modal" id="loginModal">
+  <div class="login-content">
+    <div class="login-title">请先登录</div>
+    <div class="login-desc">登录后可使用购物车、下单等功能</div>
+    <button class="login-btn" onclick="alert('跳转到登录页面')">立即登录</button>
+    <button class="login-cancel" onclick="hideLoginModal()">稍后再说</button>
+  </div>
+</div>
+
+<script>
+// Tab name to page ID mapping
+const tabMap = {
+  home: 'page-home',
+  category: 'page-category',
+  cart: 'page-cart',
+  detail: 'page-detail',
+  profile: 'page-profile'
+};
+
+// Tab name to tab index mapping (for highlighting)
+const tabIndexMap = { home: 0, category: 1, cart: 2, profile: 3 };
+
+// Track navigation history
+const navHistory = ['home'];
+let navPointer = 0;
+
+function switchTab(tabName) {
+  // Hide all pages
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+
+  // Show target page
+  const pageId = tabMap[tabName];
+  if (pageId) {
+    document.getElementById(pageId).classList.add('active');
+  }
+
+  // Update tab bar active state
+  const tabItems = document.querySelectorAll('#mainTabBar .tab-item');
+  tabItems.forEach((item, idx) => item.classList.remove('active'));
+  const tabIndex = tabIndexMap[tabName];
+  if (tabIndex !== undefined) {
+    tabItems[tabIndex].classList.add('active');
+  }
+
+  // Show/hide tab bar for detail page
+  const tabBar = document.getElementById('mainTabBar');
+  if (tabName === 'detail') {
+    tabBar.style.display = 'none';
+  } else {
+    tabBar.style.display = 'flex';
+  }
+
+  // Track history
+  if (navHistory[navPointer] !== tabName) {
+    navHistory.splice(navPointer + 1);
+    navHistory.push(tabName);
+    navPointer = navHistory.length - 1;
+  }
+
+  // Scroll to top
+  window.scrollTo(0, 0);
+}
+
+// Category page logic
+function selectCategory(element, category) {
+  document.querySelectorAll('.sidebar-item').forEach(item => {
+    item.classList.remove('active');
+  });
+  element.classList.add('active');
+
+  const categoryNames = {
+    'bags': '奢侈箱包专场',
+    'clothing': '时尚服饰专场',
+    'beauty': '美妆护肤专场',
+    'watch': '奢华腕表专场',
+    'shoes': '精品鞋履专场',
+    'jewelry': '珠宝首饰专场',
+    'skincare': '高端护肤专场',
+    'home': '品质家居专场',
+    'wine': '名庄酒水专场',
+    'digital': '数码科技专场'
+  };
+
+  const content = document.getElementById('categoryContent');
+  content.innerHTML = `
+    <div class="category-banner">${categoryNames[category]}</div>
+    <div class="sub-category-section">
+      <div class="sub-category-title">热门分类</div>
+      <div class="sub-category-grid">
+        <div class="sub-category-item" onclick="switchTab('detail')">
+          <div class="sub-category-icon">🛍</div>
+          <div class="sub-category-name">精选商品</div>
+        </div>
+        <div class="sub-category-item" onclick="switchTab('detail')">
+          <div class="sub-category-icon">🎁</div>
+          <div class="sub-category-name">新品上市</div>
+        </div>
+        <div class="sub-category-item" onclick="switchTab('detail')">
+          <div class="sub-category-icon">⭐</div>
+          <div class="sub-category-name">热门推荐</div>
+        </div>
+        <div class="sub-category-item" onclick="switchTab('detail')">
+          <div class="sub-category-icon">💰</div>
+          <div class="sub-category-name">限时特惠</div>
+        </div>
+        <div class="sub-category-item" onclick="switchTab('detail')">
+          <div class="sub-category-icon">🌟</div>
+          <div class="sub-category-name">品牌精选</div>
+        </div>
+        <div class="sub-category-item" onclick="switchTab('detail')">
+          <div class="sub-category-icon">🎯</div>
+          <div class="sub-category-name">爆款推荐</div>
+        </div>
+      </div>
+    </div>
+    <div class="product-list-section">
+      <div class="product-list-title">热门商品</div>
+      <div class="product-grid">
+        <div class="product-card" onclick="switchTab('detail')">
+          <div class="product-img">
+            <div class="product-img-placeholder">🛍</div>
+            <div class="product-tag">热销</div>
+          </div>
+          <div class="product-info">
+            <div class="product-name">精选商品推荐</div>
+            <div class="product-price">
+              <span class="price-current">¥18,800</span>
+              <span class="price-original">¥26,500</span>
+            </div>
+          </div>
+        </div>
+        <div class="product-card" onclick="switchTab('detail')">
+          <div class="product-img">
+            <div class="product-img-placeholder">🛍</div>
+            <div class="product-tag">新品</div>
+          </div>
+          <div class="product-info">
+            <div class="product-name">新品上市推荐</div>
+            <div class="product-price">
+              <span class="price-current">¥12,600</span>
+              <span class="price-original">¥18,900</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// Login modal
+function showLoginModal() {
+  document.getElementById('loginModal').classList.add('show');
+}
+
+function hideLoginModal() {
+  document.getElementById('loginModal').classList.remove('show');
+}
+</script>
+
+</body>
+</html>
